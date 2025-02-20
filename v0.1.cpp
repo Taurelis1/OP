@@ -39,6 +39,16 @@ void clearInput() {
     cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
 
+string generuotiVarda() {
+    const vector<string> vardai = {"Jonas", "Petras", "Tauras", "Antanas", "Marius", "Ugnius", "Vainius", "Darius", "Tomas", "Rokas", "Mantas", "Mindaugas", "Lukas", "Laurynas", "Karolis"};
+    return vardai[std::rand() % vardai.size()];
+}
+
+string generuotiPavarde() {
+    const vector<string> pavardes = {"Jonaitis", "Petraitis", "Kazlauskas", "Jankauskas", "Pavardenis", "Butkus", "Zukauskas", "Balciunas", "Stankevicius", "Urbonas", "Petrauskas"};
+    return pavardes[std::rand() % pavardes.size()];
+}
+
 int main() {
     std::srand(std::time(0)); 
 
@@ -57,8 +67,8 @@ int main() {
         int studentuSkaicius = std::rand() % 10 + 1; // Generuojame nuo 1 iki 10 studentu
         for (int i = 0; i < studentuSkaicius; i++) {
             Studentas student;
-            student.var = "Vardas" + std::to_string(i + 1);
-            student.pav = "Pavarde" + std::to_string(i + 1);
+            student.var = generuotiVarda();
+            student.pav = generuotiPavarde();
             int ndSkaicius = std::rand() % 10 + 1; // Generuojame nuo 1 iki 10 namu darbu
             student.nd.resize(ndSkaicius);
             for (int j = 0; j < ndSkaicius; j++) {
