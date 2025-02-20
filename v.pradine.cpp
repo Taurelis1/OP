@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <string>
 #include <iomanip>
+#include <algorithm>
 
 using std::string;
 using std::cout;
@@ -19,6 +20,15 @@ struct Studentas {
     int nd[MAX_ND];
     int egz;
 };
+
+double Mediana(int arr[], int n) {
+    std::sort(arr, arr + n);
+    if (n % 2 == 0) {
+        return (arr[n / 2 - 1] + arr[n / 2]) / 2.0;
+    } else {
+        return arr[n / 2];
+    }
+}
 
 int main() {
     int n = 0;
@@ -40,16 +50,22 @@ int main() {
         cout << "Iveskite studento egzamino ivertinima: ";
         cin >> studentai[i].egz;
     }
-	cout << "Vardas Pavarde Galutinis (Vid.)" << endl;
-	cout << "--------------------------------" << endl;
+
+    cout << "Vardas Pavarde Galutinis (Vid.) Galutinis (Med.)" << endl;
+    cout << "-----------------------------------------------" << endl;
+
     for (int i = 0; i < n; i++) {
         double vidurkis = 0.0;
         for (int j = 0; j < studentai[i].n; j++) {
             vidurkis += studentai[i].nd[j];
         }
         vidurkis /= studentai[i].n;
-        double galutinis = 0.4 * vidurkis + 0.6 * studentai[i].egz;
-        cout << studentai[i].var << " " << studentai[i].pav << " " << fixed << setprecision(2) << galutinis << endl;
+        double galutinisVid = 0.4 * vidurkis + 0.6 * studentai[i].egz;
+
+        double mediana = Mediana(studentai[i].nd, studentai[i].n);
+        double galutinisMed = 0.4 * mediana + 0.6 * studentai[i].egz;
+
+        cout << studentai[i].var << " " << studentai[i].pav << " " << fixed << setprecision(2) << galutinisVid << " " << galutinisMed << endl;
     }
 
     return 0;
