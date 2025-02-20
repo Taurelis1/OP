@@ -23,13 +23,14 @@ struct Studentas {
     int egz;
 };
 
-double Mediana(vector<int>& vec) {
-    std::sort(vec.begin(), vec.end());
-    int n = vec.size();
+double Mediana(const vector<int>& vec) {
+    vector<int> sortedVec = vec;
+    std::sort(sortedVec.begin(), sortedVec.end());
+    int n = sortedVec.size();
     if (n % 2 == 0) {
-        return (vec[n / 2 - 1] + vec[n / 2]) / 2.0;
+        return (sortedVec[n / 2 - 1] + sortedVec[n / 2]) / 2.0;
     } else {
-        return vec[n / 2];
+        return sortedVec[n / 2];
     }
 }
 
@@ -41,29 +42,15 @@ void clearInput() {
 int main() {
     std::srand(std::time(0)); 
 
-    int m = 0;
-    cout << "Iveskite studentu skaiciu: ";
-    while (!(cin >> m) || m <= 0) {
-        clearInput();
-        cout << "Neteisinga ivestis. Bandykite dar karta: ";
-    }
+    vector<Studentas> studentai;
+    char continueInput;
 
-    vector<Studentas> studentai(m);
-
-    for (int i = 0; i < m; i++) {
+    do {
+        Studentas student;
         cout << "Iveskite studento varda: ";
-        cin >> studentai[i].var;
+        cin >> student.var;
         cout << "Iveskite studento pavarde: ";
-        cin >> studentai[i].pav;
-
-        int n = 0;
-        cout << "Iveskite studento atliktu namu darbu skaiciu: ";
-        while (!(cin >> n) || n <= 0) {
-            clearInput();
-            cout << "Neteisinga ivestis. Bandykite dar karta: ";
-        }
-
-        studentai[i].nd.resize(n);
+        cin >> student.pav;
 
         char pasirinkimas;
         cout << "Ar norite generuoti atsitiktinius balus? (t - taip, n - ne): ";
@@ -73,25 +60,45 @@ int main() {
         }
 
         if (pasirinkimas == 't') {
+            int n = std::rand() % 11; 
+            student.nd.resize(n);
             for (int j = 0; j < n; j++) {
-                studentai[i].nd[j] = std::rand() % 11; // nuo 0 iki 10 random
+                student.nd[j] = std::rand() % 11; 
             }
-            studentai[i].egz = std::rand() % 11; //nuo 0 iki 10 random
+            student.egz = std::rand() % 11; 
         } else {
-            for (int j = 0; j < n; j++) {
-                cout << "Iveskite " << j + 1 << " namu darbo ivertinima: ";
-                while (!(cin >> studentai[i].nd[j]) || studentai[i].nd[j] < 0 || studentai[i].nd[j] > 10) {
+            char continueNdInput;
+            do {
+                int grade;
+                cout << "Iveskite namu darbo ivertinima: ";
+                while (!(cin >> grade) || grade < 0 || grade > 10) {
                     clearInput();
                     cout << "Neteisinga ivestis. Bandykite dar karta: ";
                 }
-            }
+                student.nd.push_back(grade);
+
+                cout << "Ar norite prideti dar viena namu darba? (t - taip, n - ne): ";
+                while (!(cin >> continueNdInput) || (continueNdInput != 't' && continueNdInput != 'n')) {
+                    clearInput();
+                    cout << "Neteisinga ivestis. Bandykite dar karta: ";
+                }
+            } while (continueNdInput == 't');
+
             cout << "Iveskite studento egzamino ivertinima: ";
-            while (!(cin >> studentai[i].egz) || studentai[i].egz < 0 || studentai[i].egz > 10) {
+            while (!(cin >> student.egz) || student.egz < 0 || student.egz > 10) {
                 clearInput();
                 cout << "Neteisinga ivestis. Bandykite dar karta: ";
             }
         }
-    }
+
+        studentai.push_back(student);
+
+        cout << "Ar norite prideti dar viena studenta? (t - taip, n - ne): ";
+        while (!(cin >> continueInput) || (continueInput != 't' && continueInput != 'n')) {
+            clearInput();
+            cout << "Neteisinga ivestis. Bandykite dar karta: ";
+        }
+    } while (continueInput == 't');
 
     char pasirinkimas;
     cout << "Pasirinkite galutinio balo skaiciavimo buda (v - vidurkis, m - mediana): ";
@@ -108,20 +115,20 @@ int main() {
         cout << "---------------------------------------------------------------------" << endl;
     }
 
-    for (int i = 0; i < m; i++) {
+    for (const auto& student : studentai) {
         double galutinis = 0.0;
         if (pasirinkimas == 'v') {
             double vidurkis = 0.0;
-            for (int j = 0; j < studentai[i].nd.size(); j++) {
-                vidurkis += studentai[i].nd[j];
+            for (const auto& grade : student.nd) {
+                vidurkis += grade;
             }
-            vidurkis /= studentai[i].nd.size();
-            galutinis = 0.4 * vidurkis + 0.6 * studentai[i].egz;
-            cout << setw(15) << studentai[i].var << setw(15) << studentai[i].pav << setw(20) << fixed << setprecision(2) << galutinis << endl;
+            vidurkis /= student.nd.size();
+            galutinis = 0.4 * vidurkis + 0.6 * student.egz;
+            cout << setw(15) << student.var << setw(15) << student.pav << setw(20) << fixed << setprecision(2) << galutinis << endl;
         } else if (pasirinkimas == 'm') {
-            double mediana = Mediana(studentai[i].nd);
-            galutinis = 0.4 * mediana + 0.6 * studentai[i].egz;
-            cout << setw(15) << studentai[i].var << setw(15) << studentai[i].pav << setw(20) << fixed << setprecision(2) << galutinis << endl;
+            double mediana = Mediana(student.nd);
+            galutinis = 0.4 * mediana + 0.6 * student.egz;
+            cout << setw(15) << student.var << setw(15) << student.pav << setw(20) << fixed << setprecision(2) << galutinis << endl;
         }
     }
 
