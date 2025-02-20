@@ -104,5 +104,10 @@ int main() {
         }
     }
 
+    for (int i = 0; i < m; i++) {
+        delete[] studentai[i].nd;
+    }
+    delete[] studentai;
+
     return 0;
 }
