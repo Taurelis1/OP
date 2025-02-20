@@ -2,6 +2,7 @@
 #include <string>
 #include <iomanip>
 #include <algorithm>
+#include <limits>
 
 using std::string;
 using std::cout;
@@ -31,10 +32,19 @@ double Mediana(int arr[], int n) {
     }
 }
 
+void clearInput() {
+    cin.clear();
+    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+}
+
 int main() {
     int n = 0;
     cout << "Iveskite studentu skaiciu: ";
-    cin >> n;
+    while (!(cin >> n) || n <= 0 || n > MAX_STUD) {
+        clearInput();
+        cout << "Neteisinga ivestis. Bandykite dar karta: ";
+    }
+
     Studentas studentai[MAX_STUD];
 
     for (int i = 0; i < n; i++) {
@@ -43,23 +53,37 @@ int main() {
         cout << "Iveskite studento pavarde: ";
         cin >> studentai[i].pav;
         cout << "Iveskite studento atliktu namu darbu skaiciu: ";
-        cin >> studentai[i].n;
+        while (!(cin >> studentai[i].n) || studentai[i].n <= 0 || studentai[i].n > MAX_ND) {
+            clearInput();
+            cout << "Neteisinga ivestis. Bandykite dar karta: ";
+        }
         for (int j = 0; j < studentai[i].n; j++) {
             cout << "Iveskite " << j + 1 << " namu darbo ivertinima: ";
-            cin >> studentai[i].nd[j];
+            while (!(cin >> studentai[i].nd[j]) || studentai[i].nd[j] < 0 || studentai[i].nd[j] > 10) {
+                clearInput();
+                cout << "Neteisinga ivestis. Bandykite dar karta: ";
+            }
         }
         cout << "Iveskite studento egzamino ivertinima: ";
-        cin >> studentai[i].egz;
+        while (!(cin >> studentai[i].egz) || studentai[i].egz < 0 || studentai[i].egz > 10) {
+            clearInput();
+            cout << "Neteisinga ivestis. Bandykite dar karta: ";
+        }
     }
 
     char pasirinkimas;
     cout << "Pasirinkite galutinio balo skaiciavimo buda (v - vidurkis, m - mediana): ";
-    cin >> pasirinkimas;
+    while (!(cin >> pasirinkimas) || (pasirinkimas != 'v' && pasirinkimas != 'm')) {
+        clearInput();
+        cout << "Neteisinga ivestis. Bandykite dar karta: ";
+    }
+
     if (pasirinkimas == 'v') {
-    cout << setw(15) << "Vardas" << setw(15) << "Pavarde" << setw(20) << "Galutinis (Vid.)" << endl;
-    cout << "---------------------------------------------------------------------" << endl;
+        cout << setw(15) << "Vardas" << setw(15) << "Pavarde" << setw(20) << "Galutinis (Vid.)" << endl;
+        cout << "---------------------------------------------------------------------" << endl;
     } else if (pasirinkimas == 'm') {
-    cout << setw(15) << "Vardas" << setw(15) << "Pavarde" << setw(20) << "Galutinis (Med.)" << endl;
+        cout << setw(15) << "Vardas" << setw(15) << "Pavarde" << setw(20) << "Galutinis (Med.)" << endl;
+        cout << "---------------------------------------------------------------------" << endl;
     }
 
     for (int i = 0; i < n; i++) {
