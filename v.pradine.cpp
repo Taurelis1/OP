@@ -52,21 +52,31 @@ int main() {
         cin >> studentai[i].egz;
     }
 
-    cout << setw(15) << "Vardas" << setw(15) << "Pavarde" << setw(20) << "Galutinis (Vid.)" << setw(20) << "Galutinis (Med.)" << endl;
+    char pasirinkimas;
+    cout << "Pasirinkite galutinio balo skaiciavimo buda (v - vidurkis, m - mediana): ";
+    cin >> pasirinkimas;
+    if (pasirinkimas == 'v') {
+    cout << setw(15) << "Vardas" << setw(15) << "Pavarde" << setw(20) << "Galutinis (Vid.)" << endl;
     cout << "---------------------------------------------------------------------" << endl;
+    } else if (pasirinkimas == 'm') {
+    cout << setw(15) << "Vardas" << setw(15) << "Pavarde" << setw(20) << "Galutinis (Med.)" << endl;
+    }
 
     for (int i = 0; i < n; i++) {
-        double vidurkis = 0.0;
-        for (int j = 0; j < studentai[i].n; j++) {
-            vidurkis += studentai[i].nd[j];
+        double galutinis = 0.0;
+        if (pasirinkimas == 'v') {
+            double vidurkis = 0.0;
+            for (int j = 0; j < studentai[i].n; j++) {
+                vidurkis += studentai[i].nd[j];
+            }
+            vidurkis /= studentai[i].n;
+            galutinis = 0.4 * vidurkis + 0.6 * studentai[i].egz;
+            cout << setw(15) << studentai[i].var << setw(15) << studentai[i].pav << setw(20) << fixed << setprecision(2) << galutinis << endl;
+        } else if (pasirinkimas == 'm') {
+            double mediana = Mediana(studentai[i].nd, studentai[i].n);
+            galutinis = 0.4 * mediana + 0.6 * studentai[i].egz;
+            cout << setw(15) << studentai[i].var << setw(15) << studentai[i].pav << setw(20) << fixed << setprecision(2) << galutinis << endl;
         }
-        vidurkis /= studentai[i].n;
-        double galutinisVid = 0.4 * vidurkis + 0.6 * studentai[i].egz;
-
-        double mediana = Mediana(studentai[i].nd, studentai[i].n);
-        double galutinisMed = 0.4 * mediana + 0.6 * studentai[i].egz;
-
-        cout << setw(15) << studentai[i].var << setw(15) << studentai[i].pav << setw(20) << fixed << setprecision(2) << galutinisVid << setw(20) << galutinisMed << endl;
     }
 
     return 0;
