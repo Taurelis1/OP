@@ -9,6 +9,7 @@ using std::cin;
 using std::endl;
 using std::fixed;
 using std::setprecision;
+using std::setw;
 
 const int MAX_STUD = 100; // Maximum number of students
 const int MAX_ND = 10; // Maximum number of homework assignments
@@ -51,8 +52,8 @@ int main() {
         cin >> studentai[i].egz;
     }
 
-    cout << "Vardas Pavarde Galutinis (Vid.) Galutinis (Med.)" << endl;
-    cout << "-----------------------------------------------" << endl;
+    cout << setw(15) << "Vardas" << setw(15) << "Pavarde" << setw(20) << "Galutinis (Vid.)" << setw(20) << "Galutinis (Med.)" << endl;
+    cout << "---------------------------------------------------------------------" << endl;
 
     for (int i = 0; i < n; i++) {
         double vidurkis = 0.0;
@@ -65,7 +66,7 @@ int main() {
         double mediana = Mediana(studentai[i].nd, studentai[i].n);
         double galutinisMed = 0.4 * mediana + 0.6 * studentai[i].egz;
 
-        cout << studentai[i].var << " " << studentai[i].pav << " " << fixed << setprecision(2) << galutinisVid << " " << galutinisMed << endl;
+        cout << setw(15) << studentai[i].var << setw(15) << studentai[i].pav << setw(20) << fixed << setprecision(2) << galutinisVid << setw(20) << galutinisMed << endl;
     }
 
     return 0;
