@@ -39,30 +39,29 @@ void clearInput() {
 int main() {
     std::srand(std::time(0)); 
 
+    Studentas* studentai = nullptr;
     int m = 0;
-    cout << "Iveskite studentu skaiciu: ";
-    while (!(cin >> m) || m <= 0) {
-        clearInput();
-        cout << "Neteisinga ivestis. Bandykite dar karta: ";
-    }
+    char pasirinkimas;
 
-    Studentas* studentai = new Studentas[m];
-
-    for (int i = 0; i < m; i++) {
-        cout << "Iveskite studento varda: ";
-        cin >> studentai[i].var;
-        cout << "Iveskite studento pavarde: ";
-        cin >> studentai[i].pav;
-
-        cout << "Iveskite studento atliktu namu darbu skaiciu: ";
-        while (!(cin >> studentai[i].n) || studentai[i].n <= 0) {
-            clearInput();
-            cout << "Neteisinga ivestis. Bandykite dar karta: ";
+    while (true) {
+        Studentas* temp = new Studentas[m + 1];
+        for (int i = 0; i < m; i++) {
+            temp[i] = studentai[i];
         }
+        delete[] studentai;
+        studentai = temp;
 
-        studentai[i].nd = new int[studentai[i].n];
+        cout << "Iveskite studento varda (arba 'q' norint baigti): ";
+        cin >> studentai[m].var;
+        if (studentai[m].var == "q") break;
+        cout << "Iveskite studento pavarde: ";
+        cin >> studentai[m].pav;
 
-        char pasirinkimas;
+        studentai[m].n = 0;
+        studentai[m].nd = nullptr;
+        int* tempNd = nullptr;
+        int ndIvertinimas;
+
         cout << "Ar norite generuoti atsitiktinius balus? (t - taip, n - ne): ";
         while (!(cin >> pasirinkimas) || (pasirinkimas != 't' && pasirinkimas != 'n')) {
             clearInput();
@@ -70,27 +69,47 @@ int main() {
         }
 
         if (pasirinkimas == 't') {
-            for (int j = 0; j < studentai[i].n; j++) {
-                studentai[i].nd[j] = std::rand() % 11; // generavimas nuo 0 iki 10
+            cout << "Iveskite norima namu darbu skaiciu: ";
+            int ndSkaicius;
+            while (!(cin >> ndSkaicius) || ndSkaicius <= 0) {
+                clearInput();
+                cout << "Neteisinga ivestis. Bandykite dar karta: ";
             }
-            studentai[i].egz = std::rand() % 11; // generavimas nuo 0 iki 10
+            studentai[m].nd = new int[ndSkaicius];
+            studentai[m].n = ndSkaicius;
+            for (int j = 0; j < ndSkaicius; j++) {
+                studentai[m].nd[j] = std::rand() % 11; // generavimas nuo 0 iki 10
+            }
+            studentai[m].egz = std::rand() % 11; // generavimas nuo 0 iki 10
         } else {
-            for (int j = 0; j < studentai[i].n; j++) {
-                cout << "Iveskite " << j + 1 << " namu darbo ivertinima: ";
-                while (!(cin >> studentai[i].nd[j]) || studentai[i].nd[j] < 0 || studentai[i].nd[j] > 10) {
+            cout << "Iveskite namu darbu ivertinimus (iveskite -1 norint baigti): " << endl;
+            while (true) {
+                cout << "Iveskite namu darbo ivertinima: ";
+                while (!(cin >> ndIvertinimas) || ndIvertinimas < -1 || ndIvertinimas > 10) {
                     clearInput();
                     cout << "Neteisinga ivestis. Bandykite dar karta: ";
                 }
+                if (ndIvertinimas == -1) break;
+
+                tempNd = new int[studentai[m].n + 1];
+                for (int j = 0; j < studentai[m].n; j++) {
+                    tempNd[j] = studentai[m].nd[j];
+                }
+                tempNd[studentai[m].n] = ndIvertinimas;
+                delete[] studentai[m].nd;
+                studentai[m].nd = tempNd;
+                studentai[m].n++;
             }
             cout << "Iveskite studento egzamino ivertinima: ";
-            while (!(cin >> studentai[i].egz) || studentai[i].egz < 0 || studentai[i].egz > 10) {
+            while (!(cin >> studentai[m].egz) || studentai[m].egz < 0 || studentai[m].egz > 10) {
                 clearInput();
                 cout << "Neteisinga ivestis. Bandykite dar karta: ";
             }
         }
+
+        m++;
     }
 
-    char pasirinkimas;
     cout << "Pasirinkite galutinio balo skaiciavimo buda (v - vidurkis, m - mediana): ";
     while (!(cin >> pasirinkimas) || (pasirinkimas != 'v' && pasirinkimas != 'm')) {
         clearInput();
