@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <vector>
 #include <limits>
+#include <cstdlib>
+#include <ctime>
 
 using std::string;
 using std::cout;
@@ -37,6 +39,8 @@ void clearInput() {
 }
 
 int main() {
+    std::srand(std::time(0)); 
+
     int m = 0;
     cout << "Iveskite studentu skaiciu: ";
     while (!(cin >> m) || m <= 0) {
@@ -60,18 +64,32 @@ int main() {
         }
 
         studentai[i].nd.resize(n);
-        for (int j = 0; j < n; j++) {
-            cout << "Iveskite " << j + 1 << " namu darbo ivertinima: ";
-            while (!(cin >> studentai[i].nd[j]) || studentai[i].nd[j] < 0 || studentai[i].nd[j] > 10) {
+
+        char pasirinkimas;
+        cout << "Ar norite generuoti atsitiktinius balus? (t - taip, n - ne): ";
+        while (!(cin >> pasirinkimas) || (pasirinkimas != 't' && pasirinkimas != 'n')) {
+            clearInput();
+            cout << "Neteisinga ivestis. Bandykite dar karta: ";
+        }
+
+        if (pasirinkimas == 't') {
+            for (int j = 0; j < n; j++) {
+                studentai[i].nd[j] = std::rand() % 11; // nuo 0 iki 10 random
+            }
+            studentai[i].egz = std::rand() % 11; //nuo 0 iki 10 random
+        } else {
+            for (int j = 0; j < n; j++) {
+                cout << "Iveskite " << j + 1 << " namu darbo ivertinima: ";
+                while (!(cin >> studentai[i].nd[j]) || studentai[i].nd[j] < 0 || studentai[i].nd[j] > 10) {
+                    clearInput();
+                    cout << "Neteisinga ivestis. Bandykite dar karta: ";
+                }
+            }
+            cout << "Iveskite studento egzamino ivertinima: ";
+            while (!(cin >> studentai[i].egz) || studentai[i].egz < 0 || studentai[i].egz > 10) {
                 clearInput();
                 cout << "Neteisinga ivestis. Bandykite dar karta: ";
             }
-        }
-
-        cout << "Iveskite studento egzamino ivertinima: ";
-        while (!(cin >> studentai[i].egz) || studentai[i].egz < 0 || studentai[i].egz > 10) {
-            clearInput();
-            cout << "Neteisinga ivestis. Bandykite dar karta: ";
         }
     }
 
