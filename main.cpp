@@ -55,11 +55,11 @@ string generuotiPavarde() {
     return pavardes[std::rand() % pavardes.size()];
 }
 
-void skaitymas(vector<Studentas>& studentai, const string& failoPav) {
+bool skaitymas(vector<Studentas>& studentai, const string& failoPav) {
     ifstream inFile(failoPav);
     if (!inFile) {
         cout << "Nepavyko atidaryti failo: " << failoPav << endl;
-        return;
+        return false;
     }
 
     string line;
@@ -78,6 +78,7 @@ void skaitymas(vector<Studentas>& studentai, const string& failoPav) {
         studentai.push_back(student);
     }
     inFile.close();
+    return true;
 }
 
 void spausdinti(const vector<Studentas>& studentai, std::ostream& out) {
@@ -184,9 +185,12 @@ int main() {
         } while (continueInput == 't');
     } else if (pasirinkimas == 'f') {
         string failoPav;
-        cout << "Iveskite failo pavadinima: ";
-        cin >> failoPav;
-        skaitymas(studentai, failoPav);
+        bool success = false;
+        do {
+            cout << "Iveskite failo pavadinima: ";
+            cin >> failoPav;
+            success = skaitymas(studentai, failoPav);
+        } while (!success);
     }
 
     char rikiavimas;
