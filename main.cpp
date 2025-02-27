@@ -189,6 +189,38 @@ int main() {
         skaitymas(studentai, failoPav);
     }
 
+    char rikiavimas;
+    cout << "Pasirinkite rusiavimo buda (v - vardas, p - pavarde, a - galutinis vidurkis, m - galutinis mediana): ";
+    while (!(cin >> rikiavimas) || (rikiavimas != 'v' && rikiavimas != 'p' && rikiavimas != 'a' && rikiavimas != 'm')) {
+        clearInput();
+        cout << "Neteisinga ivestis. Bandykite dar karta: ";
+    }
+
+    if (rikiavimas == 'v') {
+        std::sort(studentai.begin(), studentai.end(), [](const Studentas& a, const Studentas& b) {
+            return a.var < b.var;
+        });
+    } else if (rikiavimas == 'p') {
+        std::sort(studentai.begin(), studentai.end(), [](const Studentas& a, const Studentas& b) {
+            return a.pav < b.pav;
+        });
+    } else if (rikiavimas == 'a') {
+        std::sort(studentai.begin(), studentai.end(), [](const Studentas& a, const Studentas& b) {
+            double avgA = 0.0, avgB = 0.0;
+            for (const auto& grade : a.nd) avgA += grade;
+            avgA = avgA / a.nd.size() * 0.4 + a.egz * 0.6;
+            for (const auto& grade : b.nd) avgB += grade;
+            avgB = avgB / b.nd.size() * 0.4 + b.egz * 0.6;
+            return avgA < avgB;
+        });
+    } else if (rikiavimas == 'm') {
+        std::sort(studentai.begin(), studentai.end(), [](const Studentas& a, const Studentas& b) {
+            double medA = Mediana(a.nd) * 0.4 + a.egz * 0.6;
+            double medB = Mediana(b.nd) * 0.4 + b.egz * 0.6;
+            return medA < medB;
+        });
+    }
+
     char outputChoice;
     cout << "Pasirinkite isvedimo buda (s - isvedimas i ekrana, f - isvedimas i faila): ";
     while (!(cin >> outputChoice) || (outputChoice != 's' && outputChoice != 'f')) {
