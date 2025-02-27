@@ -6,6 +6,8 @@
 #include <limits>
 #include <cstdlib>
 #include <ctime>
+#include <fstream>
+#include <sstream>
 
 using std::string;
 using std::cout;
@@ -16,6 +18,8 @@ using std::setprecision;
 using std::setw;
 using std::left;
 using std::vector;
+using std::ifstream;
+using std::istringstream;
 
 struct Studentas {
     string var;
@@ -50,14 +54,39 @@ string generuotiPavarde() {
     return pavardes[std::rand() % pavardes.size()];
 }
 
+void skaitymas(vector<Studentas>& studentai, const string& failoPav) {
+    ifstream inFile(failoPav);
+    if (!inFile) {
+        cout << "Nepavyko atidaryti failo: " << failoPav << endl;
+        return;
+    }
+
+    string line;
+    getline(inFile, line); // Skip the header line
+
+    while (getline(inFile, line)) {
+        istringstream iss(line);
+        Studentas student;
+        iss >> student.var >> student.pav;
+        int grade;
+        while (iss >> grade) {
+            student.nd.push_back(grade);
+        }
+        student.egz = student.nd.back();
+        student.nd.pop_back();
+        studentai.push_back(student);
+    }
+    inFile.close();
+}
+
 int main() {
     std::srand(std::time(0)); 
 
     vector<Studentas> studentai;
     char pasirinkimas;
 
-    cout << "Pasirinkite veiksma (g - generuoti viska, i - ivesti duomenis, q - uzdaryti programa): ";
-    while (!(cin >> pasirinkimas) || (pasirinkimas != 'g' && pasirinkimas != 'i' && pasirinkimas != 'q')) {
+    cout << "Pasirinkite veiksma (g - generuoti viska, i - ivesti duomenis, f - skaityti is failo, q - uzdaryti programa): ";
+    while (!(cin >> pasirinkimas) || (pasirinkimas != 'g' && pasirinkimas != 'i' && pasirinkimas != 'f' && pasirinkimas != 'q')) {
         clearInput();
         cout << "Neteisinga ivestis. Bandykite dar karta: ";
     }
@@ -133,28 +162,29 @@ int main() {
                 cout << "Neteisinga ivestis. Bandykite dar karta: ";
             }
         } while (continueInput == 't');
+    } else if (pasirinkimas == 'f') {
+        string failoPav;
+        cout << "Iveskite failo pavadinima: ";
+        cin >> failoPav;
+        skaitymas(studentai, failoPav);
     }
 
- 
+    cout << left << setw(15) << "Vardas" << setw(20) << "Pavarde" << setw(20) << "Galutinis (Vid.)" << setw(20) << "Galutinis (Med.)" << endl;
+    cout << "---------------------------------------------------------------------" << endl;
 
-   
-        cout << "Vardas" << setw(15) << "Pavarde" << setw(20) << "Galutinis (Vid.)" << setw(20) << "Galutinis (Med.)"<< endl;
-        cout << "---------------------------------------------------------------------" << endl;
-    
     for (const auto& student : studentai) {
         double galutinis1 = 0.0;
         double galutinis2 = 0.0;
-            double vidurkis = 0.0;
-            for (const auto& grade : student.nd) {
-                vidurkis += grade;
-            }
-            vidurkis /= student.nd.size();
-            galutinis1 = 0.4 * vidurkis + 0.6 * student.egz;
-            double mediana = Mediana(student.nd);
-            galutinis2 = 0.4 * mediana + 0.6 * student.egz;
-            cout << left << setw(10) << student.var << setw(15) << student.pav << setw(20) << fixed << setprecision(2) << galutinis1 << setw(20) << fixed << setprecision(2) << galutinis2 << endl;
+        double vidurkis = 0.0;
+        for (const auto& grade : student.nd) {
+            vidurkis += grade;
         }
-    
+        vidurkis /= student.nd.size();
+        galutinis1 = 0.4 * vidurkis + 0.6 * student.egz;
+        double mediana = Mediana(student.nd);
+        galutinis2 = 0.4 * mediana + 0.6 * student.egz;
+        cout << left << setw(15) << student.var << setw(20) << student.pav << setw(20) << fixed << setprecision(2) << galutinis1 << setw(20) << fixed << setprecision(2) << galutinis2 << endl;
+    }
 
     return 0;
 }
