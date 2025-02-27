@@ -19,6 +19,7 @@ using std::setw;
 using std::left;
 using std::vector;
 using std::ifstream;
+using std::ofstream;
 using std::istringstream;
 
 struct Studentas {
@@ -62,7 +63,7 @@ void skaitymas(vector<Studentas>& studentai, const string& failoPav) {
     }
 
     string line;
-    getline(inFile, line); // Skip the header line
+    getline(inFile, line); // pirmos eilutes praleidimas
 
     while (getline(inFile, line)) {
         istringstream iss(line);
@@ -77,6 +78,25 @@ void skaitymas(vector<Studentas>& studentai, const string& failoPav) {
         studentai.push_back(student);
     }
     inFile.close();
+}
+
+void spausdinti(const vector<Studentas>& studentai, std::ostream& out) {
+    out << left << setw(15) << "Vardas" << setw(20) << "Pavarde" << setw(20) << "Galutinis (Vid.)" << setw(20) << "Galutinis (Med.)" << endl;
+    out << "---------------------------------------------------------------------" << endl;
+
+    for (const auto& student : studentai) {
+        double galutinis1 = 0.0;
+        double galutinis2 = 0.0;
+        double vidurkis = 0.0;
+        for (const auto& grade : student.nd) {
+            vidurkis += grade;
+        }
+        vidurkis /= student.nd.size();
+        galutinis1 = 0.4 * vidurkis + 0.6 * student.egz;
+        double mediana = Mediana(student.nd);
+        galutinis2 = 0.4 * mediana + 0.6 * student.egz;
+        out << left << setw(15) << student.var << setw(20) << student.pav << setw(20) << fixed << setprecision(2) << galutinis1 << setw(20) << fixed << setprecision(2) << galutinis2 << endl;
+    }
 }
 
 int main() {
@@ -169,21 +189,27 @@ int main() {
         skaitymas(studentai, failoPav);
     }
 
-    cout << left << setw(15) << "Vardas" << setw(20) << "Pavarde" << setw(20) << "Galutinis (Vid.)" << setw(20) << "Galutinis (Med.)" << endl;
-    cout << "---------------------------------------------------------------------" << endl;
+    char outputChoice;
+    cout << "Pasirinkite isvedimo buda (s - isvedimas i ekrana, f - isvedimas i faila): ";
+    while (!(cin >> outputChoice) || (outputChoice != 's' && outputChoice != 'f')) {
+        clearInput();
+        cout << "Neteisinga ivestis. Bandykite dar karta: ";
+    }
 
-    for (const auto& student : studentai) {
-        double galutinis1 = 0.0;
-        double galutinis2 = 0.0;
-        double vidurkis = 0.0;
-        for (const auto& grade : student.nd) {
-            vidurkis += grade;
+    if (outputChoice == 's') {
+        spausdinti(studentai, cout);
+    } else if (outputChoice == 'f') {
+        string outputFileName;
+        cout << "Iveskite failo pavadinima: ";
+        cin >> outputFileName;
+        ofstream outFile(outputFileName);
+        if (!outFile) {
+            cout << "Nepavyko sukurti failo: " << outputFileName << endl;
+        } else {
+            spausdinti(studentai, outFile);
+            outFile.close();
+            cout << "Duomenys sekmingai irasyti i faila: " << outputFileName << endl;
         }
-        vidurkis /= student.nd.size();
-        galutinis1 = 0.4 * vidurkis + 0.6 * student.egz;
-        double mediana = Mediana(student.nd);
-        galutinis2 = 0.4 * mediana + 0.6 * student.egz;
-        cout << left << setw(15) << student.var << setw(20) << student.pav << setw(20) << fixed << setprecision(2) << galutinis1 << setw(20) << fixed << setprecision(2) << galutinis2 << endl;
     }
 
     return 0;
