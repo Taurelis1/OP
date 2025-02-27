@@ -8,6 +8,7 @@
 #include <ctime>
 #include <fstream>
 #include <sstream>
+#include <chrono>
 
 using std::string;
 using std::cout;
@@ -21,6 +22,10 @@ using std::vector;
 using std::ifstream;
 using std::ofstream;
 using std::istringstream;
+using std::chrono::high_resolution_clock;
+using std::chrono::duration_cast;
+using std::chrono::duration;
+using std::chrono::milliseconds;
 
 struct Studentas {
     string var;
@@ -101,6 +106,8 @@ void spausdinti(const vector<Studentas>& studentai, std::ostream& out) {
 }
 
 int main() {
+    auto start = high_resolution_clock::now(); // Start the timer
+
     std::srand(std::time(0)); 
 
     vector<Studentas> studentai;
@@ -247,6 +254,10 @@ int main() {
             cout << "Duomenys sekmingai irasyti i faila: " << outputFileName << endl;
         }
     }
+
+    auto end = high_resolution_clock::now(); // End the timer
+    auto duration = duration_cast<milliseconds>(end - start);
+    cout << "Programos vykdymo trukme: " << duration.count() << " ms" << endl;
 
     return 0;
 }
