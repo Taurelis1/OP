@@ -81,7 +81,7 @@ int main() {
         }
 
         auto end = high_resolution_clock::now(); // End the timer
-        auto duration = duration_cast<milliseconds>(end - start);
+        auto duration = duration_cast<std::chrono::seconds>(end - start);
         cout << "Programos vykdymo trukme: " << duration.count() << " ms" << endl;
 
     } catch (const std::exception& e) {

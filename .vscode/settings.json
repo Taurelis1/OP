@@ -4,6 +4,7 @@
         "ios": "cpp",
         "xiosbase": "cpp",
         "iostream": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "chrono": "cpp"
     }
 }
