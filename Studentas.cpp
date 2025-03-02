@@ -27,6 +27,7 @@ string generuotiPavarde() {
     return pavardes[std::rand() % pavardes.size()];
 }
 
+// Funkcija, skirta skaityti studentu duomenis is failo
 bool skaitymas(vector<Studentas>& studentai, const string& failoPav) {
     try {
         ifstream inFile(failoPav);
@@ -57,6 +58,7 @@ bool skaitymas(vector<Studentas>& studentai, const string& failoPav) {
     }
 }
 
+// Funkcija, skirta spausdinti studentu duomenis
 void spausdinti(const vector<Studentas>& studentai, std::ostream& out) {
     out << left << setw(15) << "Vardas" << setw(20) << "Pavarde" << setw(20) << "Galutinis (Vid.)" << setw(20) << "Galutinis (Med.)" << endl;
     out << "---------------------------------------------------------------------" << endl;
@@ -76,6 +78,7 @@ void spausdinti(const vector<Studentas>& studentai, std::ostream& out) {
     }
 }
 
+// Funkcija, skirta rusiuti studentus
 void rikiuotiStudentus(vector<Studentas>& studentai, char rikiavimas) {
     if (rikiavimas == 'v') {
         std::sort(studentai.begin(), studentai.end(), [](const Studentas& a, const Studentas& b) {
@@ -103,6 +106,7 @@ void rikiuotiStudentus(vector<Studentas>& studentai, char rikiavimas) {
     }
 }
 
+// Funkcija, skirta ivesti studentu duomenis
 void ivestiStudentus(vector<Studentas>& studentai) {
     char continueInput;
     do {
