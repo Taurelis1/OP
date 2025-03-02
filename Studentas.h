@@ -16,5 +16,7 @@ string generuotiVarda();
 string generuotiPavarde();
 bool skaitymas(vector<Studentas>& studentai, const string& failoPav);
 void spausdinti(const vector<Studentas>& studentai, std::ostream& out);
+void rikiuotiStudentus(vector<Studentas>& studentai, char rikiavimas);
+void ivestiStudentus(vector<Studentas>& studentai);
 
 #endif // STUDENTAS_H

@@ -75,3 +75,88 @@ void spausdinti(const vector<Studentas>& studentai, std::ostream& out) {
         out << left << setw(15) << student.var << setw(20) << student.pav << setw(20) << fixed << setprecision(2) << galutinis1 << setw(20) << fixed << setprecision(2) << galutinis2 << endl;
     }
 }
+
+void rikiuotiStudentus(vector<Studentas>& studentai, char rikiavimas) {
+    if (rikiavimas == 'v') {
+        std::sort(studentai.begin(), studentai.end(), [](const Studentas& a, const Studentas& b) {
+            return a.var < b.var;
+        });
+    } else if (rikiavimas == 'p') {
+        std::sort(studentai.begin(), studentai.end(), [](const Studentas& a, const Studentas& b) {
+            return a.pav < b.pav;
+        });
+    } else if (rikiavimas == 'a') {
+        std::sort(studentai.begin(), studentai.end(), [](const Studentas& a, const Studentas& b) {
+            double avgA = 0.0, avgB = 0.0;
+            for (const auto& grade : a.nd) avgA += grade;
+            avgA = avgA / a.nd.size() * 0.4 + a.egz * 0.6;
+            for (const auto& grade : b.nd) avgB += grade;
+            avgB = avgB / b.nd.size() * 0.4 + b.egz * 0.6;
+            return avgA < avgB;
+        });
+    } else if (rikiavimas == 'm') {
+        std::sort(studentai.begin(), studentai.end(), [](const Studentas& a, const Studentas& b) {
+            double medA = Mediana(a.nd) * 0.4 + a.egz * 0.6;
+            double medB = Mediana(b.nd) * 0.4 + b.egz * 0.6;
+            return medA < medB;
+        });
+    }
+}
+
+void ivestiStudentus(vector<Studentas>& studentai) {
+    char continueInput;
+    do {
+        Studentas student;
+        cout << "Iveskite studento varda: ";
+        cin >> student.var;
+        cout << "Iveskite studento pavarde: ";
+        cin >> student.pav;
+
+        cout << "Ar norite generuoti atsitiktinius balus? (t - taip, n - ne): ";
+        char pasirinkimas;
+        while (!(cin >> pasirinkimas) || (pasirinkimas != 't' && pasirinkimas != 'n')) {
+            clearInput();
+            cout << "Neteisinga ivestis. Bandykite dar karta: ";
+        }
+
+        if (pasirinkimas == 't') {
+            int n = std::rand() % 11; 
+            student.nd.resize(n);
+            for (int j = 0; j < n; j++) {
+                student.nd[j] = std::rand() % 11; 
+            }
+            student.egz = std::rand() % 11; 
+        } else {
+            char continueNdInput;
+            do {
+                int grade;
+                cout << "Iveskite namu darbo ivertinima: ";
+                while (!(cin >> grade) || grade < 0 || grade > 10) {
+                    clearInput();
+                    cout << "Neteisinga ivestis. Bandykite dar karta: ";
+                }
+                student.nd.push_back(grade);
+
+                cout << "Ar norite prideti dar viena namu darba? (t - taip, n - ne): ";
+                while (!(cin >> continueNdInput) || (continueNdInput != 't' && continueNdInput != 'n')) {
+                    clearInput();
+                    cout << "Neteisinga ivestis. Bandykite dar karta: ";
+                }
+            } while (continueNdInput == 't');
+
+            cout << "Iveskite studento egzamino ivertinima: ";
+            while (!(cin >> student.egz) || student.egz < 0 || student.egz > 10) {
+                clearInput();
+                cout << "Neteisinga ivestis. Bandykite dar karta: ";
+            }
+        }
+
+        studentai.push_back(student);
+
+        cout << "Ar norite prideti dar viena studenta? (t - taip, n - ne): ";
+        while (!(cin >> continueInput) || (continueInput != 't' && continueInput != 'n')) {
+            clearInput();
+            cout << "Neteisinga ivestis. Bandykite dar karta: ";
+        }
+    } while (continueInput == 't');
+}
