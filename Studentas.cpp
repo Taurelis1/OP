@@ -28,29 +28,33 @@ string generuotiPavarde() {
 }
 
 bool skaitymas(vector<Studentas>& studentai, const string& failoPav) {
-    ifstream inFile(failoPav);
-    if (!inFile) {
-        cout << "Nepavyko atidaryti failo: " << failoPav << endl;
+    try {
+        ifstream inFile(failoPav);
+        if (!inFile) {
+            throw std::runtime_error("Nepavyko atidaryti failo: " + failoPav);
+        }
+
+        string line;
+        getline(inFile, line); // pirmos eilutes praleidimas
+
+        while (getline(inFile, line)) {
+            istringstream iss(line);
+            Studentas student;
+            iss >> student.var >> student.pav;
+            int grade;
+            while (iss >> grade) {
+                student.nd.push_back(grade);
+            }
+            student.egz = student.nd.back();
+            student.nd.pop_back();
+            studentai.push_back(student);
+        }
+        inFile.close();
+        return true;
+    } catch (const std::exception& e) {
+        cout << e.what() << endl;
         return false;
     }
-
-    string line;
-    getline(inFile, line); // pirmos eilutes praleidimas
-
-    while (getline(inFile, line)) {
-        istringstream iss(line);
-        Studentas student;
-        iss >> student.var >> student.pav;
-        int grade;
-        while (iss >> grade) {
-            student.nd.push_back(grade);
-        }
-        student.egz = student.nd.back();
-        student.nd.pop_back();
-        studentai.push_back(student);
-    }
-    inFile.close();
-    return true;
 }
 
 void spausdinti(const vector<Studentas>& studentai, std::ostream& out) {
