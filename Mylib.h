@@ -12,6 +12,7 @@
 #include <fstream>
 #include <sstream>
 #include <chrono>
+#include <stdexcept>
 
 using std::string;
 using std::cout;

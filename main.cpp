@@ -1,6 +1,55 @@
 ﻿#include "Studentas.h"
 #include "Mylib.h"
 
+void handleFileInput(vector<Studentas>& studentai) {
+    string failoPav;
+    bool success = false;
+    do {
+        cout << "Iveskite failo pavadinima: ";
+        cin >> failoPav;
+        auto start = high_resolution_clock::now(); // Start the timer for reading the file
+        success = skaitymas(studentai, failoPav);
+        auto end = high_resolution_clock::now(); // End the timer for reading the file
+        std::chrono::duration<double> duration = std::chrono::duration_cast<std::chrono::duration<double>>(end - start);
+        cout << "Failo nuskaitymo trukme: " << duration.count() << " s" << endl;
+    } while (!success);
+}
+
+void handleSorting(vector<Studentas>& studentai) {
+    char rikiavimas;
+    cout << "Pasirinkite rusiavimo buda (v - vardas, p - pavarde, a - galutinis vidurkis, m - galutinis mediana): ";
+    while (!(cin >> rikiavimas) || (rikiavimas != 'v' && rikiavimas != 'p' && rikiavimas != 'a' && rikiavimas != 'm')) {
+        clearInput();
+        cout << "Neteisinga ivestis. Bandykite dar karta: ";
+    }
+    rikiuotiStudentus(studentai, rikiavimas);
+}
+
+void handleOutput(const vector<Studentas>& studentai) {
+    char outputChoice;
+    cout << "Pasirinkite isvedimo buda (s - isvedimas i ekrana, f - isvedimas i faila): ";
+    while (!(cin >> outputChoice) || (outputChoice != 's' && outputChoice != 'f')) {
+        clearInput();
+        cout << "Neteisinga ivestis. Bandykite dar karta: ";
+    }
+
+    if (outputChoice == 's') {
+        spausdinti(studentai, cout);
+    } else if (outputChoice == 'f') {
+        string outputFileName;
+        cout << "Iveskite failo pavadinima: ";
+        cin >> outputFileName;
+        ofstream outFile(outputFileName);
+        if (!outFile) {
+            throw std::runtime_error("Nepavyko sukurti failo: " + outputFileName);
+        } else {
+            spausdinti(studentai, outFile);
+            outFile.close();
+            cout << "Duomenys sekmingai irasyti i faila: " << outputFileName << endl;
+        }
+    }
+}
+
 int main() {
     try {
         auto start = high_resolution_clock::now(); // Start the timer
@@ -35,50 +84,11 @@ int main() {
         } else if (pasirinkimas == 'i') {
             ivestiStudentus(studentai);
         } else if (pasirinkimas == 'f') {
-            string failoPav;
-            bool success = false;
-            do {
-                cout << "Iveskite failo pavadinima: ";
-                cin >> failoPav;
-                auto start = high_resolution_clock::now(); // Start the timer for reading the file
-                success = skaitymas(studentai, failoPav);
-                auto end = high_resolution_clock::now(); // End the timer for reading the file
-                std::chrono::duration<double> duration = std::chrono::duration_cast<std::chrono::duration<double>>(end - start);
-                cout << "Failo nuskaitymo trukme: " << duration.count() << " s" << endl;
-            } while (!success);
+            handleFileInput(studentai);
         }
 
-        char rikiavimas;
-        cout << "Pasirinkite rusiavimo buda (v - vardas, p - pavarde, a - galutinis vidurkis, m - galutinis mediana): ";
-        while (!(cin >> rikiavimas) || (rikiavimas != 'v' && rikiavimas != 'p' && rikiavimas != 'a' && rikiavimas != 'm')) {
-            clearInput();
-            cout << "Neteisinga ivestis. Bandykite dar karta: ";
-        }
-
-        rikiuotiStudentus(studentai, rikiavimas);
-
-        char outputChoice;
-        cout << "Pasirinkite isvedimo buda (s - isvedimas i ekrana, f - isvedimas i faila): ";
-        while (!(cin >> outputChoice) || (outputChoice != 's' && outputChoice != 'f')) {
-            clearInput();
-            cout << "Neteisinga ivestis. Bandykite dar karta: ";
-        }
-
-        if (outputChoice == 's') {
-            spausdinti(studentai, cout);
-        } else if (outputChoice == 'f') {
-            string outputFileName;
-            cout << "Iveskite failo pavadinima: ";
-            cin >> outputFileName;
-            ofstream outFile(outputFileName);
-            if (!outFile) {
-                throw std::runtime_error("Nepavyko sukurti failo: " + outputFileName);
-            } else {
-                spausdinti(studentai, outFile);
-                outFile.close();
-                cout << "Duomenys sekmingai irasyti i faila: " << outputFileName << endl;
-            }
-        }
+        handleSorting(studentai);
+        handleOutput(studentai);
 
         auto end = high_resolution_clock::now(); // End the timer
         auto duration = duration_cast<std::chrono::seconds>(end - start);
