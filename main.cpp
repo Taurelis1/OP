@@ -1,11 +1,5 @@
 ﻿#include "Mylib.h"
-
-struct Studentas {
-    string var;
-    string pav;
-    vector<int> nd;
-    int egz;
-};
+#include "Studentas.h"
 
 double Mediana(const vector<int>& vec) {
     vector<int> sortedVec = vec;
@@ -169,7 +163,11 @@ int main() {
         do {
             cout << "Iveskite failo pavadinima: ";
             cin >> failoPav;
+            auto start = high_resolution_clock::now(); // Start the timer for reading the file
             success = skaitymas(studentai, failoPav);
+            auto end = high_resolution_clock::now(); // End the timer for reading the file
+            std::chrono::duration<double> duration = std::chrono::duration_cast<std::chrono::duration<double>>(end - start);
+            cout << "Failo nuskaitymo trukme: " << duration.count() << " s" << endl;
         } while (!success);
     }
 
