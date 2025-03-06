@@ -19,7 +19,12 @@ int main() {
         if (pasirinkimas == 'q') {
             return 0;
         } else if (pasirinkimas == 'g') {
-            int studentuSkaicius = std::rand() % 10 + 1; // Generuojame nuo 1 iki 10 studentu
+            int studentuSkaicius;
+            cout << "Iveskite studentu skaiciu: ";
+            while (!(cin >> studentuSkaicius) || studentuSkaicius <= 0) {
+                clearInput();
+                cout << "Neteisinga ivestis. Bandykite dar karta: ";
+            }
             for (int i = 0; i < studentuSkaicius; i++) {
                 Studentas student;
                 student.var = generuotiVarda();
