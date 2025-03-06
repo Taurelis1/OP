@@ -1,5 +1,7 @@
 #include "Studentas.h"
 #include "Mylib.h"
+#include <fstream>
+#include <iomanip>
 
 double Mediana(const vector<int>& vec) {
     vector<int> sortedVec = vec;
@@ -29,33 +31,45 @@ string generuotiPavarde() {
 
 // Funkcija, skirta skaityti studentu duomenis is failo
 bool skaitymas(vector<Studentas>& studentai, const string& failoPav) {
-    try {
-        ifstream inFile(failoPav);
-        if (!inFile) {
-            throw std::runtime_error("Nepavyko atidaryti failo: " + failoPav);
-        }
-
-        string line;
-        getline(inFile, line); // pirmos eilutes praleidimas
-
-        while (getline(inFile, line)) {
-            istringstream iss(line);
-            Studentas student;
-            iss >> student.var >> student.pav;
-            int grade;
-            while (iss >> grade) {
-                student.nd.push_back(grade);
-            }
-            student.egz = student.nd.back();
-            student.nd.pop_back();
-            studentai.push_back(student);
-        }
-        inFile.close();
-        return true;
-    } catch (const std::exception& e) {
-        cout << e.what() << endl;
+    ifstream inFile(failoPav);
+    if (!inFile) {
+        cerr << "Nepavyko atidaryti failo: " << failoPav << endl;
         return false;
     }
+
+    string line;
+    while (getline(inFile, line)) {
+        istringstream iss(line);
+        Studentas student;
+        // Assume the file format is: vardas pavarde nd1 nd2 ... egz
+        if (!(iss >> student.var >> student.pav)) {
+            cerr << "Klaida skaitant studento duomenis" << endl;
+            continue;
+        }
+        int nd;
+        while (iss >> nd) {
+            student.nd.push_back(nd);
+        }
+        if (!student.nd.empty()) {
+            student.egz = student.nd.back();
+            student.nd.pop_back();
+        }
+        studentai.push_back(student);
+
+        // Process in chunks to avoid memory overflow
+        if (studentai.size() >= 4000000) {
+            // Process the current chunk
+            sortAndOutputStudents(studentai);
+            studentai.clear(); // Clear the vector to free memory
+        }
+    }
+
+    // Process any remaining students
+    if (!studentai.empty()) {
+        sortAndOutputStudents(studentai);
+    }
+
+    return true;
 }
 
 // Funkcija, skirta spausdinti studentu duomenis
@@ -260,8 +274,8 @@ void sortAndOutputStudents(const vector<Studentas>& studentai) {
         }
     }
 
-    ofstream outFileVargsai("vargsai.txt");
-    ofstream outFileKietakai("kietiakai.txt");
+    ofstream outFileVargsai("vargsai.txt", ios::app);
+    ofstream outFileKietakai("kietakai.txt", ios::app);
 
     spausdinti(vargsai, outFileVargsai);
     spausdinti(kietakai, outFileKietakai);
