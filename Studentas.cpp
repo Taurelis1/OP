@@ -240,3 +240,34 @@ void generateStudentFiles() {
         cout << "Failas " << fileName << " sekmingai sukurtas.\n";
     }
 }
+
+// Funkcija, skirta rusiavimui ir isvedimui
+void sortAndOutputStudents(const vector<Studentas>& studentai) {
+    vector<Studentas> vargsai, kietakai;
+
+    for (const auto& student : studentai) {
+        double vidurkis = 0.0;
+        for (const auto& grade : student.nd) {
+            vidurkis += grade;
+        }
+        vidurkis /= student.nd.size();
+        double galutinis = 0.4 * vidurkis + 0.6 * student.egz;
+
+        if (galutinis < 5.0) {
+            vargsai.push_back(student);
+        } else {
+            kietakai.push_back(student);
+        }
+    }
+
+    ofstream outFileVargsai("vargsai.txt");
+    ofstream outFileKietakai("kietiakai.txt");
+
+    spausdinti(vargsai, outFileVargsai);
+    spausdinti(kietakai, outFileKietakai);
+
+    outFileVargsai.close();
+    outFileKietakai.close();
+
+    cout << "Failai vargsai.txt ir kietakai.txt sekmingai sukurti.\n";
+}

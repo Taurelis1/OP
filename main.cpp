@@ -56,6 +56,7 @@ int main() {
             ivestiStudentus(studentai);
         } else if (pasirinkimas == 'f') {
             handleFileInput(studentai);
+            sortAndOutputStudents(studentai);
         }
 
         handleSorting(studentai);

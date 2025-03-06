@@ -34,5 +34,6 @@ void handleFileInput(vector<Studentas>& studentai);
 void handleSorting(vector<Studentas>& studentai);
 void handleOutput(const vector<Studentas>& studentai);
 void generateStudentFiles(); // Prideti deklaracija
+void sortAndOutputStudents(const vector<Studentas>& studentai); // Prideti deklaracija
 
 #endif // STUDENTAS_H
