@@ -235,6 +235,8 @@ void handleOutput(const vector<Studentas>& studentai) {
 void generateStudentFiles() {
     const vector<int> studentCounts = {1000, 10000, 100000, 1000000, 10000000};
     for (int count : studentCounts) {
+        auto start = high_resolution_clock::now(); // Start timing for each file
+
         string fileName = "studentai" + to_string(count) + ".txt";
         ofstream outFile(fileName);
         if (!outFile) {
@@ -251,7 +253,10 @@ void generateStudentFiles() {
         }
 
         outFile.close();
-        cout << "Failas " << fileName << " sekmingai sukurtas.\n";
+
+        auto end = high_resolution_clock::now(); // End timing for each file
+        auto duration = duration_cast<std::chrono::seconds>(end - start);
+        cout << "Failas " << fileName << " sekmingai sukurtas per " << duration.count() << " s.\n";
     }
 }
 
