@@ -22,6 +22,8 @@ struct Studentas {
     int egz;
 };
 
+extern char rikiavimas; // Declare as extern
+
 double Mediana(const vector<int>& vec);
 void clearInput();
 string generuotiVarda();
@@ -34,6 +36,6 @@ void handleFileInput(vector<Studentas>& studentai);
 void handleSorting(vector<Studentas>& studentai);
 void handleOutput(const vector<Studentas>& studentai);
 void generateStudentFiles();
-void sortAndOutputStudents(const vector<Studentas>& studentai);
+void sortAndOutputStudents(vector<Studentas>& studentai);
 
 #endif // STUDENTAS_H

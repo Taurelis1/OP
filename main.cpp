@@ -1,7 +1,22 @@
 #include "Studentas.h"
 #include "Mylib.h"
+#include <iostream>
+#include <vector>
+#include <chrono>
+#include <ctime>
+
+using namespace std;
+using namespace std::chrono;
 
 const int MAX_STUDENTU_SKAICIUS = 10000000; // Nustatome maksimalu studentu skaiciu
+
+void promptForSortingMethod() {
+    cout << "Pasirinkite rusiavimo buda (a - galutinis vidurkis, m - galutinis mediana): ";
+    while (!(cin >> rikiavimas) || (rikiavimas != 'a' && rikiavimas != 'm')) {
+        clearInput();
+        cout << "Neteisinga ivestis. Bandykite dar karta: ";
+    }
+}
 
 int main() {
     try {
@@ -21,12 +36,7 @@ int main() {
         if (pasirinkimas == 'q') {
             return 0;
         } else if (pasirinkimas == 's') {
-            auto genStart = high_resolution_clock::now(); // Pradeti laikmati failu generavimui
             generateStudentFiles();
-            auto genEnd = high_resolution_clock::now(); // Baigti laikmati failu generavimui
-            auto genDuration = duration_cast<std::chrono::seconds>(genEnd - genStart);
-            cout << "Studentu failu generavimo trukme: " << genDuration.count() << " s" << endl;
-            return 0;
         } else if (pasirinkimas == 'g') {
             int studentuSkaicius;
             cout << "Iveskite studentu skaiciu (maksimalus skaicius: " << MAX_STUDENTU_SKAICIUS << "): ";
@@ -55,6 +65,7 @@ int main() {
         } else if (pasirinkimas == 'i') {
             ivestiStudentus(studentai);
         } else if (pasirinkimas == 'f') {
+            promptForSortingMethod();
             handleFileInput(studentai);
         }
 

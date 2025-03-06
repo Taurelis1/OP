@@ -3,6 +3,8 @@
 #include <fstream>
 #include <iomanip>
 
+char rikiavimas; // Define the global variable
+
 double Mediana(const vector<int>& vec) {
     vector<int> sortedVec = vec;
     std::sort(sortedVec.begin(), sortedVec.end());
@@ -92,32 +94,54 @@ void spausdinti(const vector<Studentas>& studentai, std::ostream& out) {
     }
 }
 
-// Funkcija, skirta rusiuti studentus
-void rikiuotiStudentus(vector<Studentas>& studentai, char rikiavimas) {
-    if (rikiavimas == 'v') {
-        std::sort(studentai.begin(), studentai.end(), [](const Studentas& a, const Studentas& b) {
-            return a.var < b.var;
-        });
-    } else if (rikiavimas == 'p') {
-        std::sort(studentai.begin(), studentai.end(), [](const Studentas& a, const Studentas& b) {
-            return a.pav < b.pav;
-        });
-    } else if (rikiavimas == 'a') {
-        std::sort(studentai.begin(), studentai.end(), [](const Studentas& a, const Studentas& b) {
+// Funkcija, skirta rusiavimui ir isvedimui
+void sortAndOutputStudents(vector<Studentas>& studentai) {
+    vector<Studentas> vargsai, kietakai;
+
+    for (const auto& student : studentai) {
+        double vidurkis = 0.0;
+        for (const auto& grade : student.nd) {
+            vidurkis += grade;
+        }
+        vidurkis /= student.nd.size();
+        double galutinis = 0.4 * vidurkis + 0.6 * student.egz;
+
+        if (galutinis < 5.0) {
+            vargsai.push_back(student);
+        } else {
+            kietakai.push_back(student);
+        }
+    }
+
+    auto sortFunction = [](const Studentas& a, const Studentas& b) {
+        if (rikiavimas == 'a') {
             double avgA = 0.0, avgB = 0.0;
             for (const auto& grade : a.nd) avgA += grade;
             avgA = avgA / a.nd.size() * 0.4 + a.egz * 0.6;
             for (const auto& grade : b.nd) avgB += grade;
             avgB = avgB / b.nd.size() * 0.4 + b.egz * 0.6;
             return avgA < avgB;
-        });
-    } else if (rikiavimas == 'm') {
-        std::sort(studentai.begin(), studentai.end(), [](const Studentas& a, const Studentas& b) {
+        } else if (rikiavimas == 'm') {
             double medA = Mediana(a.nd) * 0.4 + a.egz * 0.6;
             double medB = Mediana(b.nd) * 0.4 + b.egz * 0.6;
             return medA < medB;
-        });
-    }
+        }
+        return false;
+    };
+
+    std::sort(vargsai.begin(), vargsai.end(), sortFunction);
+    std::sort(kietakai.begin(), kietakai.end(), sortFunction);
+
+    ofstream outFileVargsai("vargsai.txt", ios::app);
+    ofstream outFileKietakai("kietakai.txt", ios::app);
+
+    spausdinti(vargsai, outFileVargsai);
+    spausdinti(kietakai, outFileKietakai);
+
+    outFileVargsai.close();
+    outFileKietakai.close();
+
+    cout << "Failai vargsai.txt ir kietakai.txt sekmingai sukurti.\n";
 }
 
 // Funkcija, skirta ivesti studentu duomenis
@@ -138,12 +162,12 @@ void ivestiStudentus(vector<Studentas>& studentai) {
         }
 
         if (pasirinkimas == 't') {
-            int n = std::rand() % 11; 
+            int n = std::rand() % 11;
             student.nd.resize(n);
             for (int j = 0; j < n; j++) {
-                student.nd[j] = std::rand() % 11; 
+                student.nd[j] = std::rand() % 11;
             }
-            student.egz = std::rand() % 11; 
+            student.egz = std::rand() % 11;
         } else {
             char continueNdInput;
             do {
@@ -196,7 +220,6 @@ void handleFileInput(vector<Studentas>& studentai) {
 
 // Funkcija, skirta studentu rusiavimui
 void handleSorting(vector<Studentas>& studentai) {
-    char rikiavimas;
     cout << "Pasirinkite rusiavimo buda (v - vardas, p - pavarde, a - galutinis vidurkis, m - galutinis mediana): ";
     while (!(cin >> rikiavimas) || (rikiavimas != 'v' && rikiavimas != 'p' && rikiavimas != 'a' && rikiavimas != 'm')) {
         clearInput();
@@ -260,33 +283,30 @@ void generateStudentFiles() {
     }
 }
 
-// Funkcija, skirta rusiavimui ir isvedimui
-void sortAndOutputStudents(const vector<Studentas>& studentai) {
-    vector<Studentas> vargsai, kietakai;
-
-    for (const auto& student : studentai) {
-        double vidurkis = 0.0;
-        for (const auto& grade : student.nd) {
-            vidurkis += grade;
-        }
-        vidurkis /= student.nd.size();
-        double galutinis = 0.4 * vidurkis + 0.6 * student.egz;
-
-        if (galutinis < 5.0) {
-            vargsai.push_back(student);
-        } else {
-            kietakai.push_back(student);
-        }
+// Define the missing function
+void rikiuotiStudentus(vector<Studentas>& studentai, char rikiavimas) {
+    if (rikiavimas == 'v') {
+        std::sort(studentai.begin(), studentai.end(), [](const Studentas& a, const Studentas& b) {
+            return a.var < b.var;
+        });
+    } else if (rikiavimas == 'p') {
+        std::sort(studentai.begin(), studentai.end(), [](const Studentas& a, const Studentas& b) {
+            return a.pav < b.pav;
+        });
+    } else if (rikiavimas == 'a') {
+        std::sort(studentai.begin(), studentai.end(), [](const Studentas& a, const Studentas& b) {
+            double avgA = 0.0, avgB = 0.0;
+            for (const auto& grade : a.nd) avgA += grade;
+            avgA = avgA / a.nd.size() * 0.4 + a.egz * 0.6;
+            for (const auto& grade : b.nd) avgB += grade;
+            avgB = avgB / b.nd.size() * 0.4 + b.egz * 0.6;
+            return avgA < avgB;
+        });
+    } else if (rikiavimas == 'm') {
+        std::sort(studentai.begin(), studentai.end(), [](const Studentas& a, const Studentas& b) {
+            double medA = Mediana(a.nd) * 0.4 + a.egz * 0.6;
+            double medB = Mediana(b.nd) * 0.4 + b.egz * 0.6;
+            return medA < medB;
+        });
     }
-
-    ofstream outFileVargsai("vargsai.txt", ios::app);
-    ofstream outFileKietakai("kietakai.txt", ios::app);
-
-    spausdinti(vargsai, outFileVargsai);
-    spausdinti(kietakai, outFileKietakai);
-
-    outFileVargsai.close();
-    outFileKietakai.close();
-
-    cout << "Failai vargsai.txt ir kietakai.txt sekmingai sukurti.\n";
 }
