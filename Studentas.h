@@ -30,8 +30,9 @@ bool skaitymas(vector<Studentas>& studentai, const string& failoPav);
 void spausdinti(const vector<Studentas>& studentai, std::ostream& out);
 void rikiuotiStudentus(vector<Studentas>& studentai, char rikiavimas);
 void ivestiStudentus(vector<Studentas>& studentai);
-void handleFileInput(vector<Studentas>& studentai); // Prideti deklaracija
-void handleSorting(vector<Studentas>& studentai); // Prideti deklaracija
-void handleOutput(const vector<Studentas>& studentai); // Prideti deklaracija
+void handleFileInput(vector<Studentas>& studentai);
+void handleSorting(vector<Studentas>& studentai);
+void handleOutput(const vector<Studentas>& studentai);
+void generateStudentFiles(); // Prideti deklaracija
 
 #endif // STUDENTAS_H

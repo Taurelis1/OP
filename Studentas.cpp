@@ -216,3 +216,27 @@ void handleOutput(const vector<Studentas>& studentai) {
         }
     }
 }
+
+// Funkcija, skirta generuoti studentu failus
+void generateStudentFiles() {
+    const vector<int> studentCounts = {1000, 10000, 100000, 1000000, 10000000};
+    for (int count : studentCounts) {
+        string fileName = "studentai" + to_string(count) + ".txt";
+        ofstream outFile(fileName);
+        if (!outFile) {
+            throw std::runtime_error("Nepavyko sukurti failo: " + fileName);
+        }
+
+        for (int i = 1; i <= count; ++i) {
+            outFile << "Vardas" << i << " Pavarde" << i;
+            int ndSkaicius = std::rand() % 10 + 1; // Generuojame nuo 1 iki 10 namu darbu
+            for (int j = 0; j < ndSkaicius; ++j) {
+                outFile << " " << std::rand() % 11; // Generuojame balus nuo 0 iki 10
+            }
+            outFile << " " << std::rand() % 11 << "\n"; // Generuojame egzamino bala nuo 0 iki 10
+        }
+
+        outFile.close();
+        cout << "Failas " << fileName << " sekmingai sukurtas.\n";
+    }
+}

@@ -12,13 +12,20 @@ int main() {
         vector<Studentas> studentai;
         char pasirinkimas;
 
-        cout << "Pasirinkite veiksma (g - generuoti viska, i - ivesti duomenis, f - skaityti is failo, q - uzdaryti programa): ";
-        while (!(cin >> pasirinkimas) || (pasirinkimas != 'g' && pasirinkimas != 'i' && pasirinkimas != 'f' && pasirinkimas != 'q')) {
+        cout << "Pasirinkite veiksma (s - generuoti studentu failus, g - generuoti viska, i - ivesti duomenis, f - skaityti is failo, q - uzdaryti programa): ";
+        while (!(cin >> pasirinkimas) || (pasirinkimas != 's' && pasirinkimas != 'g' && pasirinkimas != 'i' && pasirinkimas != 'f' && pasirinkimas != 'q')) {
             clearInput();
             cout << "Neteisinga ivestis. Bandykite dar karta: ";
         }
 
         if (pasirinkimas == 'q') {
+            return 0;
+        } else if (pasirinkimas == 's') {
+            auto genStart = high_resolution_clock::now(); // Pradeti laikmati failu generavimui
+            generateStudentFiles();
+            auto genEnd = high_resolution_clock::now(); // Baigti laikmati failu generavimui
+            auto genDuration = duration_cast<std::chrono::seconds>(genEnd - genStart);
+            cout << "Studentu failu generavimo trukme: " << genDuration.count() << " s" << endl;
             return 0;
         } else if (pasirinkimas == 'g') {
             int studentuSkaicius;
@@ -56,7 +63,7 @@ int main() {
 
         auto end = high_resolution_clock::now(); // Baigti laikmati
         auto duration = duration_cast<std::chrono::seconds>(end - start);
-        cout << "Programos vykdymo trukme: " << duration.count() << " ms" << endl;
+        cout << "Programos vykdymo trukme: " << duration.count() << " s" << endl;
 
     } catch (const std::exception& e) {
         cout << "Ivyko klaida: " << e.what() << endl;
