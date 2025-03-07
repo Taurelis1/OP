@@ -2,6 +2,17 @@
 #include "Mylib.h"
 #include <fstream>
 #include <iomanip>
+#include <iostream>
+#include <vector>
+#include <chrono>
+#include <ctime>
+#include <sstream>
+#include <stdexcept>
+#include <limits>
+#include <algorithm>
+
+using namespace std;
+using namespace std::chrono;
 
 char rikiavimas; // Define the global variable
 
@@ -22,13 +33,13 @@ void clearInput() {
 }
 
 string generuotiVarda() {
-    const vector<string> vardai = {"Jonas", "Petras", "Tauras", "Antanas", "Marius", "Ugnius", "Vainius", "Darius", "Tomas", "Rokas", "Mantas", "Mindaugas", "Lukas", "Laurynas", "Karolis"};
-    return vardai[std::rand() % vardai.size()];
+    // Implement your name generation logic here
+    return "Vardas";
 }
 
 string generuotiPavarde() {
-    const vector<string> pavardes = {"Jonaitis", "Petraitis", "Kazlauskas", "Jankauskas", "Pavardenis", "Butkus", "Zukauskas", "Balciunas", "Stankevicius", "Urbonas", "Petrauskas"};
-    return pavardes[std::rand() % pavardes.size()];
+    // Implement your surname generation logic here
+    return "Pavarde";
 }
 
 // Funkcija, skirta skaityti studentu duomenis is failo
@@ -40,10 +51,10 @@ bool skaitymas(vector<Studentas>& studentai, const string& failoPav) {
     }
 
     string line;
+    getline(inFile, line); // Skip the header line
     while (getline(inFile, line)) {
         istringstream iss(line);
         Studentas student;
-        // Assume the file format is: vardas pavarde nd1 nd2 ... egz
         if (!(iss >> student.var >> student.pav)) {
             cerr << "Klaida skaitant studento duomenis" << endl;
             continue;
@@ -57,18 +68,6 @@ bool skaitymas(vector<Studentas>& studentai, const string& failoPav) {
             student.nd.pop_back();
         }
         studentai.push_back(student);
-
-        // Process in chunks to avoid memory overflow
-        if (studentai.size() >= 4000000) {
-            // Process the current chunk
-            sortAndOutputStudents(studentai);
-            studentai.clear(); // Clear the vector to free memory
-        }
-    }
-
-    // Process any remaining students
-    if (!studentai.empty()) {
-        sortAndOutputStudents(studentai);
     }
 
     return true;
@@ -132,8 +131,8 @@ void sortAndOutputStudents(vector<Studentas>& studentai) {
     std::sort(vargsai.begin(), vargsai.end(), sortFunction);
     std::sort(kietakai.begin(), kietakai.end(), sortFunction);
 
-    ofstream outFileVargsai("vargsai.txt", ios::app);
-    ofstream outFileKietakai("kietakai.txt", ios::app);
+    ofstream outFileVargsai("vargsai.txt");
+    ofstream outFileKietakai("kietakai.txt");
 
     spausdinti(vargsai, outFileVargsai);
     spausdinti(kietakai, outFileKietakai);
@@ -162,12 +161,12 @@ void ivestiStudentus(vector<Studentas>& studentai) {
         }
 
         if (pasirinkimas == 't') {
-            int n = std::rand() % 11;
+            int n = 15; // Fixed number of marks
             student.nd.resize(n);
             for (int j = 0; j < n; j++) {
-                student.nd[j] = std::rand() % 11;
+                student.nd[j] = std::rand() % 10 + 1; // Generuojame balus nuo 1 iki 10
             }
-            student.egz = std::rand() % 11;
+            student.egz = std::rand() % 10 + 1; // Generuojame egzamino bala nuo 1 iki 10
         } else {
             char continueNdInput;
             do {
@@ -216,6 +215,9 @@ void handleFileInput(vector<Studentas>& studentai) {
         std::chrono::duration<double> duration = std::chrono::duration_cast<std::chrono::duration<double>>(end - start);
         cout << "Failo nuskaitymo trukme: " << duration.count() << " s" << endl;
     } while (!success);
+
+    // Call sortAndOutputStudents after reading the file
+    sortAndOutputStudents(studentai);
 }
 
 // Funkcija, skirta studentu rusiavimui
@@ -266,13 +268,20 @@ void generateStudentFiles() {
             throw std::runtime_error("Nepavyko sukurti failo: " + fileName);
         }
 
+        // Add header line
+        outFile << left << setw(15) << "Vardas" << setw(20) << "Pavarde";
+        for (int i = 1; i <= 15; ++i) {
+            outFile << setw(5) << ("p" + to_string(i));
+        }
+        outFile << setw(5) << "egz" << "\n";
+
         for (int i = 1; i <= count; ++i) {
-            outFile << "Vardas" << i << " Pavarde" << i;
-            int ndSkaicius = std::rand() % 10 + 1; // Generuojame nuo 1 iki 10 namu darbu
+            outFile << left << setw(15) << ("Vardas" + to_string(i)) << setw(20) << ("Pavarde" + to_string(i));
+            int ndSkaicius = 15; // Fixed number of marks
             for (int j = 0; j < ndSkaicius; ++j) {
-                outFile << " " << std::rand() % 11; // Generuojame balus nuo 0 iki 10
+                outFile << setw(5) << (std::rand() % 10 + 1); // Generuojame balus nuo 1 iki 10
             }
-            outFile << " " << std::rand() % 11 << "\n"; // Generuojame egzamino bala nuo 0 iki 10
+            outFile << setw(5) << (std::rand() % 10 + 1) << "\n"; // Generuojame egzamino bala nuo 1 iki 10
         }
 
         outFile.close();

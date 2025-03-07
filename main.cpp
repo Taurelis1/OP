@@ -50,20 +50,22 @@ int main() {
                     Studentas student;
                     student.var = generuotiVarda();
                     student.pav = generuotiPavarde();
-                    int ndSkaicius = std::rand() % 10 + 1; // Generuojame nuo 1 iki 10 namu darbu
+                    int ndSkaicius = 15; // Fixed number of marks
                     student.nd.resize(ndSkaicius);
                     for (int j = 0; j < ndSkaicius; j++) {
-                        student.nd[j] = std::rand() % 11; // Generuojame balus nuo 0 iki 10
+                        student.nd[j] = std::rand() % 10 + 1; // Generuojame balus nuo 1 iki 10
                     }
-                    student.egz = std::rand() % 11; // Generuojame egzamino bala nuo 0 iki 10
+                    student.egz = std::rand() % 10 + 1; // Generuojame egzamino bala nuo 1 iki 10
                     studentai.push_back(student);
                 }
+                sortAndOutputStudents(studentai);
             } catch (const std::bad_alloc& e) {
                 cout << "Nepavyko sukurti studentu: " << e.what() << endl;
                 return 1;
             }
         } else if (pasirinkimas == 'i') {
             ivestiStudentus(studentai);
+            sortAndOutputStudents(studentai);
         } else if (pasirinkimas == 'f') {
             promptForSortingMethod();
             handleFileInput(studentai);
