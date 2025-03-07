@@ -52,6 +52,7 @@ bool skaitymas(vector<Studentas>& studentai, const string& failoPav) {
 
     string line;
     getline(inFile, line); // Skip the header line
+
     while (getline(inFile, line)) {
         istringstream iss(line);
         Studentas student;
@@ -67,7 +68,19 @@ bool skaitymas(vector<Studentas>& studentai, const string& failoPav) {
             student.egz = student.nd.back();
             student.nd.pop_back();
         }
+
         studentai.push_back(student);
+
+        // Process in chunks
+        if (studentai.size() >= 4000000) {
+            sortAndOutputStudents(studentai);
+            studentai.clear();
+        }
+    }
+
+    // Process remaining students
+    if (!studentai.empty()) {
+        sortAndOutputStudents(studentai);
     }
 
     return true;
@@ -131,8 +144,8 @@ void sortAndOutputStudents(vector<Studentas>& studentai) {
     std::sort(vargsai.begin(), vargsai.end(), sortFunction);
     std::sort(kietakai.begin(), kietakai.end(), sortFunction);
 
-    ofstream outFileVargsai("vargsai.txt");
-    ofstream outFileKietakai("kietakai.txt");
+    ofstream outFileVargsai("vargsai.txt", ios::app); // Open in append mode
+    ofstream outFileKietakai("kietakai.txt", ios::app); // Open in append mode
 
     spausdinti(vargsai, outFileVargsai);
     spausdinti(kietakai, outFileKietakai);
@@ -140,9 +153,8 @@ void sortAndOutputStudents(vector<Studentas>& studentai) {
     outFileVargsai.close();
     outFileKietakai.close();
 
-    cout << "Failai vargsai.txt ir kietakai.txt sekmingai sukurti.\n";
+    cout << "Failai vargsai.txt ir kietakai.txt sekmingai atnaujinti.\n";
 }
-
 // Funkcija, skirta ivesti studentu duomenis
 void ivestiStudentus(vector<Studentas>& studentai) {
     char continueInput;
