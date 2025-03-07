@@ -108,6 +108,8 @@ void spausdinti(const vector<Studentas>& studentai, std::ostream& out) {
 
 // Funkcija, skirta rusiavimui ir isvedimui
 void sortAndOutputStudents(vector<Studentas>& studentai) {
+    auto start = high_resolution_clock::now(); // Start timing for sorting and outputting
+
     vector<Studentas> vargsai, kietakai;
 
     for (const auto& student : studentai) {
@@ -152,6 +154,10 @@ void sortAndOutputStudents(vector<Studentas>& studentai) {
 
     outFileVargsai.close();
     outFileKietakai.close();
+
+    auto end = high_resolution_clock::now(); // End timing for sorting and outputting
+    std::chrono::duration<double> duration = std::chrono::duration_cast<std::chrono::duration<double>>(end - start);
+    cout << "Rusiavimo ir isvedimo trukme: " << duration.count() << " s\n";
 
     cout << "Failai vargsai.txt ir kietakai.txt sekmingai atnaujinti.\n";
 }
