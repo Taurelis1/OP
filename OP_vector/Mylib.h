@@ -13,6 +13,7 @@
 #include <sstream>
 #include <chrono>
 #include <stdexcept>
+#include <list>
 
 using std::string;
 using std::cout;
