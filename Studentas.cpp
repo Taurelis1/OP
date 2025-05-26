@@ -70,17 +70,6 @@ bool skaitymas(vector<Studentas>& studentai, const string& failoPav) {
         }
 
         studentai.push_back(student);
-
-        // Process in chunks
-        if (studentai.size() >= 4000000) {
-            sortAndOutputStudents(studentai);
-            studentai.clear();
-        }
-    }
-
-    // Process remaining students
-    if (!studentai.empty()) {
-        sortAndOutputStudents(studentai);
     }
 
     return true;
@@ -114,10 +103,12 @@ void sortAndOutputStudents(vector<Studentas>& studentai) {
 
     for (const auto& student : studentai) {
         double vidurkis = 0.0;
-        for (const auto& grade : student.nd) {
-            vidurkis += grade;
+        if (!student.nd.empty()) {
+            for (const auto& grade : student.nd) {
+                vidurkis += grade;
+            }
+            vidurkis /= student.nd.size();
         }
-        vidurkis /= student.nd.size();
         double galutinis = 0.4 * vidurkis + 0.6 * student.egz;
 
         if (galutinis < 5.0) {
@@ -148,6 +139,10 @@ void sortAndOutputStudents(vector<Studentas>& studentai) {
 
     ofstream outFileVargsai("vargsai.txt", ios::app); // Open in append mode
     ofstream outFileKietakai("kietakai.txt", ios::app); // Open in append mode
+
+    if (!outFileVargsai || !outFileKietakai) {
+        throw std::runtime_error("Nepavyko atidaryti failu isvedimui.");
+    }
 
     spausdinti(vargsai, outFileVargsai);
     spausdinti(kietakai, outFileKietakai);
