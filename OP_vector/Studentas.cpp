@@ -100,19 +100,22 @@ void sortAndOutputStudents(vector<Studentas>& studentai) {
     // 1. Skirstymo į grupes laikas
     auto start_split = high_resolution_clock::now();
 
-    auto isVargsas = [](const Studentas& student) {
+    vector<Studentas> vargsai, kietakai;
+    for (const auto& student : studentai) {
         double vidurkis = 0.0;
-        for (const auto& grade : student.nd) vidurkis += grade;
-        vidurkis /= student.nd.size();
+        if (!student.nd.empty()) {
+            for (const auto& grade : student.nd) {
+                vidurkis += grade;
+            }
+            vidurkis /= student.nd.size();
+        }
         double galutinis = 0.4 * vidurkis + 0.6 * student.egz;
-        return galutinis < 5.0;
-    };
-
-    // Partition studentai: vargsai at the front, kietakai at the back
-    auto it = std::partition(studentai.begin(), studentai.end(), isVargsas);
-
-    vector<Studentas> vargsai(studentai.begin(), it);
-    vector<Studentas> kietakai(it, studentai.end());
+        if (galutinis < 5.0) {
+            vargsai.push_back(student);
+        } else {
+            kietakai.push_back(student);
+        }
+    }
 
     auto end_split = high_resolution_clock::now();
     std::chrono::duration<double> duration_split = end_split - start_split;
@@ -144,7 +147,7 @@ void sortAndOutputStudents(vector<Studentas>& studentai) {
     std::chrono::duration<double> duration_sort = end_sort - start_sort;
     cout << "Rusiavimo didejimo tvarka trukme: " << duration_sort.count() << " s\n";
 
-    // 3. Išvedimo laikas
+    // 3. Išvedimo laikas (jei norite matuoti)
     auto start_output = high_resolution_clock::now();
 
     ofstream outFileVargsai("vargsai.txt", ios::app);
