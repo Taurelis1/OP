@@ -9,6 +9,8 @@ SSD 1000GB
 
 Duomenų apdorojimas:
 
+1 Strategija: Bendro studentai konteinerio skaidymas (rūšiavimas) į du naujus to paties tipo konteinerius: "vargsai" ir "kietakai". Tokiu būdu tas pats studentas yra dvejuose konteineriuose: bendrame studentai ir viename iš suskaidytų.
+
 studentai1000.txt
 | Konteineris | nuskaitymo trukmė  | skirstymo į dvi grupes trukmė | rūšiavimo didėjimo tvarka trukmė | 
 |----|--------------------|-------------------------|--------------------------------|
