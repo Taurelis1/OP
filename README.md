@@ -1,6 +1,12 @@
 # OP
 Objektinis Programavimas
 
+Testavimas atliekamas su tais pačiais failais iš 1000, 10000, 100000, 1000000, 10000000 įrašų.
+Sistemos parametrai:
+Intel i9-14900HX
+32GB RAM
+SSD 1000GB
+
 Studentų pažymių failų kūrimo laikas:
 
 | Nr.| studentai1000.txt       | studentai10000.txt   | studentai100000.txt   | studentai1000000.txt | studentai10000000.txt |
