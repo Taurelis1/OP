@@ -246,8 +246,17 @@ void handleFileInput(list<Studentas>& studentai) {
         cout << "Failo nuskaitymo trukme: " << duration.count() << " s" << endl;
     } while (!success);
 
-    // Call sortAndOutputStudents after reading the file
-    sortAndOutputStudents(studentai);
+ cout << "Pasirinkite strategija (1 - du konteineriai, 2 - vienas konteineris su trynimu): ";
+    int strat;
+    cin >> strat;
+    if (strat == 1) {
+        sortAndOutputStudents(studentai); // 1 strategija
+    } else if (strat == 2) {
+        skaidyti2_list(studentai);      // 2 strategija
+    }
+    else {
+        cout << "Neteisingas pasirinkimas. Bandykite dar karta." << endl;
+    }
 }
 
 // Funkcija, skirta studentu rusiavimui
@@ -348,4 +357,74 @@ void rikiuotiStudentus(list<Studentas>& studentai, char rikiavimas) {
             return medA < medB;
         });
     }
+}
+
+void skaidyti2_list(list<Studentas>& studentai) {
+    auto start = high_resolution_clock::now();
+
+    list<Studentas> vargsai;
+    for (auto it = studentai.begin(); it != studentai.end(); ) {
+        double vidurkis = 0.0;
+        for (int n : it->nd) vidurkis += n;
+        vidurkis /= it->nd.size();
+        double galutinis = 0.4 * vidurkis + 0.6 * it->egz;
+        if (galutinis < 5.0) {
+            vargsai.push_back(*it);
+            it = studentai.erase(it); // erase grąžina iteratorių į kitą elementą
+        } else {
+            ++it;
+        }
+    }
+
+    auto end = high_resolution_clock::now();
+    cout << "Skirstymo i dvi grupes trukme: " << duration_cast<duration<double>>(end - start).count() << " s\n";
+    cout << "Vargsai: " << vargsai.size() << ", Kietakai: " << studentai.size() << endl;
+
+    // Rūšiavimas
+    auto start_sort = high_resolution_clock::now();
+
+    auto sortFunction = [](const Studentas& a, const Studentas& b) {
+        if (rikiavimas == 'a') {
+            double avgA = 0.0, avgB = 0.0;
+            for (const auto& grade : a.nd) avgA += grade;
+            avgA = avgA / a.nd.size() * 0.4 + a.egz * 0.6;
+            for (const auto& grade : b.nd) avgB += grade;
+            avgB = avgB / b.nd.size() * 0.4 + b.egz * 0.6;
+            return avgA < avgB;
+        } else if (rikiavimas == 'm') {
+            double medA = Mediana(a.nd) * 0.4 + a.egz * 0.6;
+            double medB = Mediana(b.nd) * 0.4 + b.egz * 0.6;
+            return medA < medB;
+        }
+        return false;
+    };
+
+    vargsai.sort(sortFunction);
+    studentai.sort(sortFunction);
+
+    auto end_sort = high_resolution_clock::now();
+    std::chrono::duration<double> duration_sort = end_sort - start_sort;
+    cout << "Rusiavimo didejimo tvarka trukme: " << duration_sort.count() << " s\n";
+
+    // Išvedimas
+    auto start_output = high_resolution_clock::now();
+
+    ofstream outFileVargsai("vargsai.txt", ios::app);
+    ofstream outFileKietakai("kietakai.txt", ios::app);
+
+    if (!outFileVargsai || !outFileKietakai) {
+        throw std::runtime_error("Nepavyko atidaryti failu isvedimui.");
+    }
+
+    spausdinti(vargsai, outFileVargsai);
+    spausdinti(studentai, outFileKietakai);
+
+    outFileVargsai.close();
+    outFileKietakai.close();
+
+    auto end_output = high_resolution_clock::now();
+    std::chrono::duration<double> duration_output = end_output - start_output;
+    cout << "Isvedimo i failus trukme: " << duration_output.count() << " s\n";
+
+    cout << "Failai vargsai.txt ir kietakai.txt sekmingai atnaujinti.\n";
 }
