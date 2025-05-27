@@ -37,5 +37,6 @@ void handleSorting(vector<Studentas>& studentai);
 void handleOutput(const vector<Studentas>& studentai);
 void generateStudentFiles();
 void sortAndOutputStudents(vector<Studentas>& studentai);
+void skaidyti2_vector(vector<Studentas>& studentai);
 
 #endif // STUDENTAS_H
