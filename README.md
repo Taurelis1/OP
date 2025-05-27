@@ -101,7 +101,7 @@ studentai1000.txt
 | Konteineris | nuskaitymo trukmė  | skirstymo į dvi grupes trukmė | rūšiavimo didėjimo tvarka trukmė | 
 |----|--------------------|-------------------------|--------------------------------|
 | vector  |  0.006716 s  |  0 s  |  0.002267 s  | 
-| list  |  0.008385 s  |  0.001047 s  |  0.003058 s  |
+| list  |  0.008182 s  |  0.000616 s  |  0.001908 s  |
 | deque  |  0.005156 s  |  0.014375 s  |  0.004059 s  |
 
 
@@ -109,7 +109,7 @@ studentai10000.txt
 | Konteineris | nuskaitymo trukmė  | skirstymo į dvi grupes trukmė | rūšiavimo didėjimo tvarka trukmė | 
 |----|--------------------|-------------------------|--------------------------------|
 | vector  |  0.06402 s  |  0.003833 s  |  0.030926 s  | 
-| list  |  0.087688 s  |  0.011733 s  |  0.034489 s  |
+| list  |  0.083816 s  |  0.002004 s  |  0.033453 s  |
 | deque  |  0.066401 s  |   1.1099 s  |  0.043675 s  |
 
 
@@ -117,7 +117,7 @@ studentai100000.txt
 | Konteineris | nuskaitymo trukmė  | skirstymo į dvi grupes trukmė | rūšiavimo didėjimo tvarka trukmė | 
 |----|--------------------|-------------------------|--------------------------------|
 | vector  |  0.658439 s  |  0.037274 s  |  0.411755 s  | 
-| list |  0.815418 s  |  0.09118 s  |  0.461479 s |
+| list |  0.825068 s  |  0.019493 s  |  0.460547 s |
 | deque  |  0.648705 s  |   113.235 s  |  0.564726 s  |
 
 
@@ -125,7 +125,7 @@ studentai1000000.txt
 | Konteineris | nuskaitymo trukmė  | skirstymo į dvi grupes trukmė | rūšiavimo didėjimo tvarka trukmė | 
 |----|--------------------|-------------------------|--------------------------------|
 | vector  |  6.51211 s  |  0.389969 s  |  5.55069 s  | 
-| list  |  7.99065 s  |  0.828697 s |  6.75767 s  |
+| list  |  8.25015 s  |  0.178532 s |  6.76464 s  |
 | deque  |  -  |  -  |  -  |
 
 
@@ -133,5 +133,5 @@ studentai10000000.txt
 | Konteineris | nuskaitymo trukmė  | skirstymo į dvi grupes trukmė | rūšiavimo didėjimo tvarka trukmė | 
 |----|--------------------|-------------------------|--------------------------------|
 | vector  |  64.58945 s  |  4.98756 s  |  55.64325 s  | 
-| list |  8.14647 s  |  12.78521 s  |  65.15442 s  |
+| list |  81.75854 s  |  12.81256 s  |  65.89785 s  |
 | deque  |  -  |  -  |  -  |

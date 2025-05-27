@@ -40,5 +40,6 @@ void handleOutput(const list<Studentas>& studentai);
 void generateStudentFiles();
 void sortAndOutputStudents(list<Studentas>& studentai);
 void skaidyti2_list(list<Studentas>& studentai);
+void skaidyti3_list(list<Studentas>& studentai);
 
 #endif // STUDENTAS_H
