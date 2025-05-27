@@ -100,10 +100,10 @@ void spausdinti(const list<Studentas>& studentai, std::ostream& out) {
 
 // Funkcija, skirta rusiavimui ir isvedimui
 void sortAndOutputStudents(list<Studentas>& studentai) {
-    auto start = high_resolution_clock::now();
+    // 1. Skirstymo į grupes laikas
+    auto start_split = high_resolution_clock::now();
 
     list<Studentas> vargsai, kietakai;
-
     for (const auto& student : studentai) {
         double vidurkis = 0.0;
         if (!student.nd.empty()) {
@@ -113,13 +113,19 @@ void sortAndOutputStudents(list<Studentas>& studentai) {
             vidurkis /= student.nd.size();
         }
         double galutinis = 0.4 * vidurkis + 0.6 * student.egz;
-
         if (galutinis < 5.0) {
             vargsai.push_back(student);
         } else {
             kietakai.push_back(student);
         }
     }
+
+    auto end_split = high_resolution_clock::now();
+    std::chrono::duration<double> duration_split = end_split - start_split;
+    cout << "Skirstymo i dvi grupes trukme: " << duration_split.count() << " s\n";
+
+    // 2. Rūšiavimo laikas
+    auto start_sort = high_resolution_clock::now();
 
     auto sortFunction = [](const Studentas& a, const Studentas& b) {
         if (rikiavimas == 'a') {
@@ -140,6 +146,13 @@ void sortAndOutputStudents(list<Studentas>& studentai) {
     vargsai.sort(sortFunction);
     kietakai.sort(sortFunction);
 
+    auto end_sort = high_resolution_clock::now();
+    std::chrono::duration<double> duration_sort = end_sort - start_sort;
+    cout << "Rusiavimo didejimo tvarka trukme: " << duration_sort.count() << " s\n";
+
+    // 3. Išvedimo laikas
+    auto start_output = high_resolution_clock::now();
+
     ofstream outFileVargsai("vargsai.txt", ios::app);
     ofstream outFileKietakai("kietakai.txt", ios::app);
 
@@ -153,9 +166,10 @@ void sortAndOutputStudents(list<Studentas>& studentai) {
     outFileVargsai.close();
     outFileKietakai.close();
 
-    auto end = high_resolution_clock::now();
-    std::chrono::duration<double> duration = std::chrono::duration_cast<std::chrono::duration<double>>(end - start);
-    cout << "Rusiavimo ir isvedimo trukme: " << duration.count() << " s\n";
+    auto end_output = high_resolution_clock::now();
+    std::chrono::duration<double> duration_output = end_output - start_output;
+    cout << "Isvedimo i failus trukme: " << duration_output.count() << " s\n";
+
     cout << "Failai vargsai.txt ir kietakai.txt sekmingai atnaujinti.\n";
 }
 // Funkcija, skirta ivesti studentu duomenis
