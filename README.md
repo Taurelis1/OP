@@ -139,4 +139,4 @@ studentai10000000.txt
 
 Palyginus visas šias strategijas galima teigti, kad 3 strategija yra greičiausia, o antra strategija nors ir sutaupo atminties, bet didėjant studentų skaičiui programos veikimo laikas pradeda drastiškai ilgėti.
 
-![3 Strategija](nuotraukos/3 strategija.png)
+![3 Strategija](nuotraukos/strategija.png)
