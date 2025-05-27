@@ -39,5 +39,6 @@ void handleOutput(const deque<Studentas>& studentai);
 void generateStudentFiles();
 void sortAndOutputStudents(deque<Studentas>& studentai);
 void skaidyti2_deque(deque<Studentas>& studentai);
+void skaidyti3_deque(deque<Studentas>& studentai);
 
 #endif // STUDENTAS_H
