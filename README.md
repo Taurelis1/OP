@@ -1,6 +1,24 @@
 # OP
 Objektinis Programavimas
 
+## Naudojimosi instrukcija
+
+1. Atsisiųskite (arba nuklonuokite) šį projektą į savo kompiuterį.
+2. Atidarykite terminalą tame aplanke, su kuriuo konteineriu norite dirbti.
+Pvz. C:\Users\Public\Documents\GitHub\OP\OP_deque
+3. Programos paleidimas (įveskite į terminalą): 
+mkdir build
+cd build
+cmake ..
+cmake --build .
+cd Debug
+main.exe
+4. Vykdykite programos nurodymus terminale:
+   - Pasirinkite veiksmą (failų generavimas, duomenų įvedimas, skaitymas iš failo ir t.t.).
+   - Pasirinkite rūšiavimo būdą ir strategiją.
+   - Įveskite failo pavadinimą, jei reikia.
+5. Rezultatai bus išsaugoti į `vargsai.txt` ir `kietakai.txt` failus.
+
 Testavimas atliekamas su tais pačiais failais iš 1000, 10000, 100000, 1000000, 10000000 įrašų.
 Sistemos parametrai:
 Intel i9-14900HX
