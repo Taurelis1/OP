@@ -245,15 +245,16 @@ void handleFileInput(vector<Studentas>& studentai) {
     // Call sortAndOutputStudents after reading the file 1 strategija
     //sortAndOutputStudents(studentai);
     //2 strategija
-    cout << "Pasirinkite strategija (1 - du konteineriai, 2 - vienas konteineris su trynimu): ";
+    cout << "Pasirinkite strategija (1 - du konteineriai, 2 - vienas konteineris su trynimu, 3 - naudojant partition): ";
     int strat;
     cin >> strat;
     if (strat == 1) {
         sortAndOutputStudents(studentai); // 1 strategija
     } else if (strat == 2) {
         skaidyti2_vector(studentai);      // 2 strategija
-    }
-    else {
+    } else if (strat == 3) {
+        skaidyti3_vector(studentai);      // 3 strategija
+    } else {
         cout << "Neteisingas pasirinkimas. Bandykite dar karta." << endl;
     }
 }
@@ -417,6 +418,76 @@ void skaidyti2_vector(vector<Studentas>& studentai) {
 
     spausdinti(vargsai, outFileVargsai);
     spausdinti(studentai, outFileKietakai);
+
+    outFileVargsai.close();
+    outFileKietakai.close();
+
+    auto end_output = high_resolution_clock::now();
+    std::chrono::duration<double> duration_output = end_output - start_output;
+    cout << "Isvedimo i failus trukme: " << duration_output.count() << " s\n";
+
+    cout << "Failai vargsai.txt ir kietakai.txt sekmingai atnaujinti.\n";
+}
+
+void skaidyti3_vector(vector<Studentas>& studentai) {
+    auto start = high_resolution_clock::now();
+
+    // Partition: vargsai priekyje, kietakai gale
+    auto isVargsas = [](const Studentas& s) {
+        double vidurkis = 0.0;
+        for (int n : s.nd) vidurkis += n;
+        vidurkis /= s.nd.size();
+        double galutinis = 0.4 * vidurkis + 0.6 * s.egz;
+        return galutinis < 5.0;
+    };
+
+    auto it = std::partition(studentai.begin(), studentai.end(), isVargsas);
+
+    vector<Studentas> vargsai(studentai.begin(), it);
+    vector<Studentas> kietakai(it, studentai.end());
+
+    auto end = high_resolution_clock::now();
+    cout << "Skirstymo i dvi grupes trukme (partition): " << duration_cast<duration<double>>(end - start).count() << " s\n";
+    cout << "Vargsai: " << vargsai.size() << ", Kietakai: " << kietakai.size() << endl;
+
+    // Rūšiavimas
+    auto start_sort = high_resolution_clock::now();
+
+    auto sortFunction = [](const Studentas& a, const Studentas& b) {
+        if (rikiavimas == 'a') {
+            double avgA = 0.0, avgB = 0.0;
+            for (const auto& grade : a.nd) avgA += grade;
+            avgA = avgA / a.nd.size() * 0.4 + a.egz * 0.6;
+            for (const auto& grade : b.nd) avgB += grade;
+            avgB = avgB / b.nd.size() * 0.4 + b.egz * 0.6;
+            return avgA < avgB;
+        } else if (rikiavimas == 'm') {
+            double medA = Mediana(a.nd) * 0.4 + a.egz * 0.6;
+            double medB = Mediana(b.nd) * 0.4 + b.egz * 0.6;
+            return medA < medB;
+        }
+        return false;
+    };
+
+    std::sort(vargsai.begin(), vargsai.end(), sortFunction);
+    std::sort(kietakai.begin(), kietakai.end(), sortFunction);
+
+    auto end_sort = high_resolution_clock::now();
+    std::chrono::duration<double> duration_sort = end_sort - start_sort;
+    cout << "Rusiavimo didejimo tvarka trukme: " << duration_sort.count() << " s\n";
+
+    // Išvedimas
+    auto start_output = high_resolution_clock::now();
+
+    ofstream outFileVargsai("vargsai.txt", ios::app);
+    ofstream outFileKietakai("kietakai.txt", ios::app);
+
+    if (!outFileVargsai || !outFileKietakai) {
+        throw std::runtime_error("Nepavyko atidaryti failu isvedimui.");
+    }
+
+    spausdinti(vargsai, outFileVargsai);
+    spausdinti(kietakai, outFileKietakai);
 
     outFileVargsai.close();
     outFileKietakai.close();
